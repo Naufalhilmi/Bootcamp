@@ -3,7 +3,7 @@ package com.example.bootcamp.model;
 public class ApiResult {
 
     private String timeStamp;
-    private boolean sucess;
+    private boolean success;
     private String message;
     private String token;
     private Object data;
@@ -17,11 +17,11 @@ public class ApiResult {
     }
 
     public boolean isSucess() {
-        return sucess;
+        return success;
     }
 
-    public void setSuccess(boolean sucess) {
-        this.sucess = sucess;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getMessage() {
@@ -52,7 +52,7 @@ public class ApiResult {
     public String toString() {
         return "ApiResult{" +
                 "timeStamp='" + timeStamp + '\'' +
-                ", success=" + sucess +
+                ", success=" + success +
                 ", message='" + message + '\'' +
                 ", token='" + token + '\'' +
                 ", data=" + data +
