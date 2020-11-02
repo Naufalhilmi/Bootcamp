@@ -134,7 +134,7 @@ public class RegisterActivity2 extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResult> call, Response<ApiResult> response) {
                 ApiResult apiResponse = response.body();
-                boolean success = apiResponse.isSucess();
+                boolean success = apiResponse.isSuccess();
                 Log.i(TAG, "onResponse: " +success);
                 if (success) {
                     Toast.makeText(RegisterActivity2.this, "", Toast.LENGTH_SHORT).show();

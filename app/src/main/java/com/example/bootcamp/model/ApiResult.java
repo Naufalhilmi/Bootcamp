@@ -16,7 +16,7 @@ public class ApiResult {
         this.timeStamp = timeStamp;
     }
 
-    public boolean isSucess() {
+    public boolean isSuccess() {
         return success;
     }
 

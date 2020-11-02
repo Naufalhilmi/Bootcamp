@@ -11,10 +11,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bootcamp.Interface.AppService;
 import com.example.bootcamp.Interface.UserApiService;
 import com.example.bootcamp.model.ApiResult;
 import com.example.bootcamp.model.Login;
+import com.example.bootcamp.model.User;
 import com.example.bootcamp.utilities.Cons;
+import com.google.gson.Gson;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -103,10 +106,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResult> call, Response<ApiResult> response) {
                 ApiResult apiResponse = response.body();
-                boolean success = apiResponse.isSucess();
+                boolean success = apiResponse.isSuccess();
                 Log.i(TAG, "onResponse: " +success);
                 if (success) {
+                    Gson gson = new Gson();
                     Toast.makeText(LoginActivity.this, "Selamat Datang", Toast.LENGTH_SHORT).show();
+                    User userResult = gson.fromJson(gson.toJson(apiResponse.getData()), User.class);
+                    AppService.setToken("Bearer "+apiResponse.getToken());
+                    AppService.setUser(userResult);
                     toMainActivity();
                 } else {
                     Toast.makeText(LoginActivity.this, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();

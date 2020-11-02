@@ -7,6 +7,7 @@ import com.example.bootcamp.model.Register;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 public interface UserApiService {
 
@@ -15,5 +16,6 @@ public interface UserApiService {
 
     @POST("register")
     Call<ApiResult> userRegister(@Body Register registerBody);
+
 
 }
