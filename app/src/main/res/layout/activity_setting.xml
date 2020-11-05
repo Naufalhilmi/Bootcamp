@@ -7,50 +7,40 @@
     tools:context=".SettingActivity">
 
 
-    <Button
-        android:id="@+id/btn_Cimage"
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose image"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.575"
-        android:drawableLeft="@drawable/baseline_image_black_18dp" />
+        app:layout_constraintVertical_bias="0.0">
 
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="163dp"
-        android:layout_height="181dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.333"
-        app:srcCompat="@drawable/baseline_account_box_black_18dp" />
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Image Setting" />
 
-    <Button
-        android:id="@+id/btn_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.688"
-        android:drawableLeft="@drawable/baseline_save_black_18dp"/>
 
-    <Button
-        android:id="@+id/btn_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update"
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address Setting" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.812" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"/>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
