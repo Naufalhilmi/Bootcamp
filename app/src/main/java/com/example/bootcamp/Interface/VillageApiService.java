@@ -10,4 +10,7 @@ import retrofit2.http.Query;
 public interface VillageApiService {
     @GET("api/villages/getByDistrictId")
     Call<ApiResult> getAllVillageId(@Header("Authorization") String token, @Query("districtId") Integer districtId);
+
+    @GET("api/villages/getById")
+    Call<ApiResult> getVillageById(@Header("Authorization") String token, @Query("id") int id);
 }

@@ -14,6 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bootcamp"
         android:usesCleartextTraffic="true">
+        <activity android:name=".MovieDetail"></activity>
         <activity android:name=".SettingActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />

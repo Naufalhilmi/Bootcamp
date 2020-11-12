@@ -10,4 +10,7 @@ import retrofit2.http.Query;
 public interface RegenciesApiService {
     @GET("api/regencies/getByProvinceId")
     Call<ApiResult> getRegencieByProvinceId(@Header("Authorization") String token, @Query("provinceId") Integer provinceId);
+
+    @GET("api/regencies/getById")
+    Call<ApiResult> getRegencieById(@Header("Authorization") String token, @Query("id") int id);
 }

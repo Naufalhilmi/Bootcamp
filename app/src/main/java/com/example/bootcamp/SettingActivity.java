@@ -1,6 +1,8 @@
 package com.example.bootcamp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -21,10 +23,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.bootcamp.Interface.AppService;
+import com.example.bootcamp.Interface.UserAddressService;
 import com.example.bootcamp.Interface.UserApiService;
 import com.example.bootcamp.Interface.UserImageService;
+import com.example.bootcamp.fragment.RetrofitUtility;
+import com.example.bootcamp.fragment.UserAddressDataFragment;
+import com.example.bootcamp.fragment.UserAddressFragment;
+import com.example.bootcamp.fragment.UserImageFragment;
 import com.example.bootcamp.model.ApiResult;
 import com.example.bootcamp.model.Login;
+import com.example.bootcamp.model.UserAddress;
 import com.example.bootcamp.model.UserImage;
 import com.example.bootcamp.utilities.Cons;
 import com.google.android.material.tabs.TabItem;
@@ -53,6 +61,8 @@ public class SettingActivity extends AppCompatActivity {
     Button mChooseBtn, buttonSave, buttonUpdate;
     private Long user_id;
     private String avatar;
+    TabLayout tabLayout;
+    private UserAddress userAddress;
 
 
     @Override
@@ -60,29 +70,150 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        TabItem tabImage = findViewById(R.id.tabImage);
-        TabItem tabAddress = findViewById(R.id.tabAddress);
-        ViewPager viewPager = findViewById(R.id.viewPager);
+//        TabLayout tabLayout = findViewById(R.id.tabLayout);
+//        TabItem tabImage = findViewById(R.id.tabImage);
+//        TabItem tabAddress = findViewById(R.id.tabAddress);
+//        ViewPager viewPager = findViewById(R.id.viewPager);
+//
+//        PagerAdapter pagerAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+//        viewPager.setAdapter(pagerAdapter);
+//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                viewPager.setCurrentItem(tab.getPosition());
+//            }
+//
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {
+//
+//            }
+//
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {
+//
+//            }
+//        });
 
-        PagerAdapter pagerAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapter);
+        getUserAvatar();
+        openUserImageFragment();
+    }
+
+    private void getUserAvatar() {
+        Long user_id = AppService.getUser().getId();
+        tabLayout = findViewById(R.id.tabLayout);
+
+        retrofit = RetrofitUtility.initializeRetrofit();
+
+        UserImageService userImageService = retrofit.create(UserImageService.class);  //instansiasi interfacenya ke retrofit
+        Call<ApiResult> result = userImageService.getUserImage(AppService.getToken(), user_id);   // call method interfacenya
+
+
+        result.enqueue(new Callback<ApiResult>() {
+            @Override
+            public void onResponse(Call<ApiResult> call, Response<ApiResult> response) {
+                Log.e(TAG, "User setting response : " + response);
+            }
+
+            @Override
+            public void onFailure(Call<ApiResult> call, Throwable t) {
+                Log.e(TAG, "onFailure user setting: " + t);
+            }
+        });
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+                int position = tab.getPosition();
+                Log.e(TAG, "onTabSelected: " + position);
+                if (position == 0) {
+                    Log.e(TAG, "onTabSelected: user image");
+                    openUserImageFragment();
+                } else {
+                    Log.e(TAG, "onTabSelected: user address");
+//                    openUserAddressFragment();
+                    getUserAddressData();
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                Log.e(TAG, "onTabUnselected: " + tab);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                Log.e(TAG, "onTabReselected: " + tab);
+            }
+        });
+
+    }
+
+    public void openUserImageFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        UserImageFragment strCode = new UserImageFragment();
+        fragmentTransaction.replace(R.id.content, strCode, "UserImageFragment");
+        fragmentTransaction.commit();
+    }
+
+    private void getUserAddressData() {
+
+        String user_id = String.valueOf(AppService.getUser().getId());
+
+        UserAddressService userAddressApiService = retrofit.create(UserAddressService.class);
+        Call<ApiResult> resultCall = userAddressApiService.getUserAddressById(AppService.getToken(), user_id);
+
+        resultCall.enqueue(new Callback<ApiResult>() {
+            @Override
+            public void onResponse(Call<ApiResult> call, Response<ApiResult> response) {
+                ApiResult result = response.body();
+
+                if (result.isSuccess()) {
+                    Gson gson = new Gson();
+                    userAddress = gson.fromJson(gson.toJson(result.getData()), UserAddress.class);
+                    openUserAddressDataFragment();
+                } else {
+                    Log.e(TAG, "onResponse failed : ");
+                    openUserAddressFragment();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ApiResult> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t);
+//                Toasty.error(getBaseContext(), t.getMessage(), Toasty.LENGTH_LONG).show();
+                Toast.makeText(SettingActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
 
             }
         });
+
+    }
+
+    public void openUserAddressFragment() {
+        Log.e(TAG, "openUserAddressFragment: ");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        UserAddressFragment strCode = new UserAddressFragment();
+        fragmentTransaction.replace(R.id.content, strCode, "userAddressFragment");
+        fragmentTransaction.commit();
+    }
+
+    public void openUserAddressDataFragment() {
+        Log.e(TAG, "openUserAddressDataFragment: ");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        UserAddressDataFragment strCode = new UserAddressDataFragment();
+        fragmentTransaction.replace(R.id.content, strCode, "userAddressF");
+        fragmentTransaction.commit();
+    }
+
+    public UserAddress getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(UserAddress userAddress) {
+        this.userAddress = userAddress;
     }
 }
 //        super.onCreate(savedInstanceState);
